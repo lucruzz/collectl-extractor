@@ -1,6 +1,6 @@
 # Collectl Extractor
 
-:gear Under development...
+:gear: **`Under development...`**
 
 ## Prerequisites
 - Python >= 3.13
