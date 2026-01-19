@@ -1,12 +1,11 @@
 # Collectl Extractor
 
-Um programa para extrair as informações dos jobs do collectl.
+:gear Under development...
 
-## Pré-requisitos
-
+## Prerequisites
 - Python >= 3.13
 
-## Procedimentos
+## How to use
 
 ```bash
 $ python3 -m venv .venv
