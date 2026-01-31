@@ -1,0 +1,5 @@
+SUCCESS                         = 0
+ERROR_NO_USER_OR_PASSWORD       = 1
+ERROR_NO_SCHEMA_DECLARED        = 2
+ERROR_NO_INPUT_CSV_FILE         = 3
+ERROR_NO_COLUMN_INDICATED       = 4
