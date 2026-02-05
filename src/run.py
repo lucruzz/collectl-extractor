@@ -2,7 +2,7 @@
 __author__     = "Lucas Cruz"
 __copyright__  = "Copyright 2026"
 __credits__    = ["Lucas Cruz"]
-__license__    = "GPL"
+__license__    = None
 __version__    = "0.0.1"
 __maintainer__ = "Lucas Cruz"
 __email__      = "lucruz@posgrad.lncc.br"

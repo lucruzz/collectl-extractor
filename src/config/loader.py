@@ -28,8 +28,8 @@ def apply_config_from_file(parser: Namespace) -> Namespace:
     parser.dbname = config.get('Database', 'database_name')
     parser.host = config.get('Database', 'database_host')
     parser.port = int(config.get('Database', 'database_port'))
-    parser.update_db = bool(config.get('Database', 'database_update_db'))
-    parser.populate_db = bool(config.get('Database', 'database_populate_db'))
+    parser.update_db = False if config.get('Database', 'database_update_db') != "True" else True
+    parser.populate_db = False if config.get('Database', 'database_populate_db') != "True" else True
     parser.columns_db = config.get('Database', 'database_columns_db')
-
+    
     return parser

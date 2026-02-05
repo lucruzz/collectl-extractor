@@ -1,3 +1,11 @@
 inputs/
+
 .venv/
-./*/__pycache__
+
+src/app/__pycache__
+src/cli/__pycache__
+src/config/__pycache__
+src/domain/__pycache__
+src/infrastructure/__pycache__
+src/pipelines/__pycache__
+src/utils/__pycache__
