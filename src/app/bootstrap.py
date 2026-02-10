@@ -5,7 +5,5 @@ from app.dispatcher import dispatch
 
 def start() -> None:
     parser = parse_arguments()
-    
     config = resolve_configuration(parser)
-
     dispatch(config)

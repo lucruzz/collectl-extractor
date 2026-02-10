@@ -1,7 +1,7 @@
 import sys
 import psycopg2
 from argparse import Namespace
-from utils.code import log_error, log_info
+from utils.logging import log_error, log_info
 
 class Database:
     def __init__(self, config: Namespace):

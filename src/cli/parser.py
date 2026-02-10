@@ -9,6 +9,14 @@ def parse_arguments() -> Namespace:
 
     # arquivo de configuração para substituir as configurações via CLI.
     parser.add_argument(
+        '-a', '--action', 
+        type=str, 
+        help="Determinate the type of collect from the DB. Options are: 'populate', 'update' and 'export'.", 
+        default=None
+    )
+
+    # arquivo de configuração para substituir as configurações via CLI.
+    parser.add_argument(
         '-C', '--columns-db', 
         type=str, 
         help='Columns to be updated on database.', 
@@ -30,7 +38,6 @@ def parse_arguments() -> Namespace:
         default='aiio_db'
     )
     
-    
     # diretório onde estão localizados os arquivos de entrada.
     parser.add_argument(
         '-i', '--input', 
@@ -44,6 +51,13 @@ def parse_arguments() -> Namespace:
         '-I', '--input-csv', 
         type=str, 
         help='File CSV.'
+    )
+
+    # arquivo csv que será utilizado para ler as informações dos jobs para serem cadastrados no BD.
+    parser.add_argument(
+        '-f', '--filter-by', 
+        type=str, 
+        help="Filter DB by: 'year', 'task'."
     )
     
     # Diretório onde serão gerados os arquivos de saída, se houver.
@@ -80,7 +94,7 @@ def parse_arguments() -> Namespace:
     parser.add_argument(
         '-t', '--type', 
         type=str, 
-        help='Type of data input file: \"io\" for I/O data or \"job\" for Slurm job data.'
+        help="Type of data input file: 'io' for I/O data or 'job' for Slurm job data."
     )
 
     # Se o banco deve ser atualizado.

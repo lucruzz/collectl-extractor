@@ -3,6 +3,7 @@ from psycopg2 import sql
 from .database import Database
 from domain.job import Job
 from argparse import Namespace
+from typing import List
 
 
 class JobRepository:
@@ -56,15 +57,17 @@ class JobRepository:
 
         cursor.execute(query, values)
 
-    def fetch_jobs(self):
-        query = sql.SQL("""
-            SELECT jobid, nodelist, jobstart, jobend, status
-            FROM {}.job
-        """).format(sql.Identifier(self._db.schema))
+    def fetch_jobs(self) -> List[tuple]:
+        query = f"""
+            SELECT jobid, status, nodelist, jobstart, jobend FROM {self.get_schema()}.job
+        """
 
-        cur = self._db.connection.cursor()
-        cur.execute(query)
-        rows = cur.fetchall()
-        cur.close()
+        self.db.connect_db()
+        conn = self.db.get_connection()
+
+        cursor = conn.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        self.db.close_db()
 
         return rows

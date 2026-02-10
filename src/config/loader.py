@@ -9,6 +9,8 @@ def apply_config_from_file(parser: Namespace) -> Namespace:
     # variaveis sobre o tipo de dado a ser processado
     parser.type = config.get('Processing', 'processing_type')
 
+    parser.action = config.get('Processing', 'processing_action')
+
     # variaveis sobre o job
     if parser.type == 'job':
         parser.input_file = config.get('Job', 'job_input_file')
