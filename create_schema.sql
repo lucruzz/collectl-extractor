@@ -14,9 +14,10 @@ CREATE TABLE sdumont2nd.job (
     nodelist    VARCHAR(1000),
     task        VARCHAR(255),
     username    VARCHAR(50),
-    reqtres     VARCHAR(50)
+    reqtres     VARCHAR(80)
 );
 
 -- O comando abaixo foi utilizado para criar a tabela job do schema sdumont2nd
 -- Se baseando no schema sdumont.
 -- CREATE TABLE sdumont2nd.job (LIKE sdumont.job INCLUDING ALL);
+

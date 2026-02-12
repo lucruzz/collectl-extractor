@@ -24,11 +24,10 @@ class Database:
             )
 
             if self._connection.status:
-                log_info("Database is connected.")
+                log_info("Database: Database is connected.")
 
         except Exception as error:
             log_error("Error: Database connection failed.")
-            print(error)
             sys.exit(1)
 
     def get_connection(self):
@@ -41,4 +40,4 @@ class Database:
     def close_db(self) -> None:
         if self._connection is not None:
             self._connection.close()
-        log_info("Database connection closed.")
+            log_info("Database: Database connection closed.")

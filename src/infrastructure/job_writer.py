@@ -1,17 +1,17 @@
 import csv
 from pathlib import Path
 
-def write_jobs(datajobs: list, inputfile: str = 'slurm_jobs.csv', outputpath: str = './outputs/slurm'):
+
+def write_jobs(datajobs: list, prefix: str, outputpath: str = './outputs/slurm'):
     Path(outputpath).parent.mkdir(parents=True, exist_ok=True)
-    fullpath = outputpath + "/" + inputfile
+    fullpath = outputpath + "/" + prefix + "_jobs_with_io.csv"
 
     with open(fullpath, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(
-            ["jobid", "nodelist", "jobstart", "jobend"]
+            ["jobid", "nodelist", "jobstart", "jobend", "possibleio"]
         )
         writer.writerows(datajobs)
 
-def run_save_pipeline(config, not_overlaped_jobs: list, overlaped_jobs: list):
-    write_jobs(not_overlaped_jobs, inputfile = 'not_overlaped_jobs',  outputpath = config.output)
-    write_jobs(overlaped_jobs,  inputfile = 'overlaped_jobs', outputpath = config.output)
+def run_save_pipeline(config, jobs_with_io: list):
+    write_jobs(jobs_with_io, config.schema_db, outputpath = config.output)

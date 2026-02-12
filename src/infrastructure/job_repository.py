@@ -1,9 +1,9 @@
 # import psycopg2
-from psycopg2 import sql
 from .database import Database
 from domain.job import Job
 from argparse import Namespace
 from typing import List
+from utils.logging import log_info, log_error
 
 
 class JobRepository:
@@ -22,6 +22,8 @@ class JobRepository:
     def insert_jobs(self, jobs: list[Job])-> None:
         self.db.connect_db()
         conn = self.db.get_connection()
+
+        log_info('JobRepository: Inserting slurm data on database.')
 
         with conn.cursor() as cursor:
             for job in jobs:
@@ -54,6 +56,7 @@ class JobRepository:
             job.username, 
             job.reqtres
         )
+        # print(values)
 
         cursor.execute(query, values)
 

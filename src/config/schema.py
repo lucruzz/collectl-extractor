@@ -16,7 +16,7 @@ def job_validate_required_fields(parser: Namespace) -> int:
         return code.ERROR_NO_SCHEMA_DECLARED
     
     # verifica se o arquivo de input dos jobs que será parseado para popular o banco foi indicado
-    if not parser.input_file:
+    if (parser.populate_db or parser.update_db) and not parser.input_file:
         # encerra indicando falha devido a falta do arquivo (dos jobs)
         return code.ERROR_NO_INPUT_CSV_FILE
 

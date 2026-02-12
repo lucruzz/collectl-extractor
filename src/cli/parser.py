@@ -11,7 +11,7 @@ def parse_arguments() -> Namespace:
     parser.add_argument(
         '-a', '--action', 
         type=str, 
-        help="Determinate the type of collect from the DB. Options are: 'populate', 'update' and 'export'.", 
+        help="Determinate the type of collect from the DB. Options are: 'populate', 'update' and 'extract'.", 
         default=None
     )
 
@@ -58,6 +58,18 @@ def parse_arguments() -> Namespace:
         '-f', '--filter-by', 
         type=str, 
         help="Filter DB by: 'year', 'task'."
+    )
+
+    parser.add_argument(
+        '-E', '--month-end', 
+        type=str, 
+        help='Month in which I/O collection will end.'
+    )
+    
+    parser.add_argument(
+        '-S', '--month-start', 
+        type=str, 
+        help='Month in which I/O collection will begin.'
     )
     
     # Diretório onde serão gerados os arquivos de saída, se houver.
@@ -110,6 +122,12 @@ def parse_arguments() -> Namespace:
         '-U', '--user', 
         type=str, 
         help='Username to access database.'
+    )
+
+    parser.add_argument(
+        '-y', '--year', 
+        type=str, 
+        help='Reference year of the I/O files that will be collected.'
     )
 
     return parser.parse_args()

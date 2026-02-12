@@ -1,6 +1,8 @@
 import re
 from datetime import datetime
 from typing import List
+import subprocess
+from pathlib import Path
 
 
 def expand_nodelist(nodelist_str: str) -> List[str]:
@@ -84,6 +86,7 @@ def verify_node_overlap(datajobs: list) -> list:
         start = parse_time(str(job[3]))
         end = parse_time(str(job[4]))
         nodes = job[2].split(',')
+        tmp = [jobid, nodes, start, end]
 
         is_valid = True
         for node in nodes:
@@ -92,13 +95,67 @@ def verify_node_overlap(datajobs: list) -> list:
                     continue
                 if intervals_overlap(start, end, ostart, oend):
                     is_valid = False
-                    not_valid.append(job)
+                    not_valid.append(tmp)
                     break
             if not is_valid:
                 break
 
         if is_valid:
-            valid.append(job)
+            valid.append(tmp)
 
     return valid, not_valid
 
+def get_nodes_with_io_registered(year: str, month_start: str, month_end: str, schema: str, inputs_collectl: str, outputs_collectl: str) -> int:
+    inputs_collectl += "/" + year
+    result = subprocess.run(
+        ['bash', './src/scripts/xtransforme_collectl.sh', year, month_start, month_end, schema, inputs_collectl, outputs_collectl], 
+        # capture_output=True, # descomentar para permitir que o output do script bash NÃO apareça
+        text=True
+    )
+    return result.returncode # 0 é sucesso
+
+def get_nodeset(nodeset: set, inputfile: str) -> set:
+    with open(inputfile) as f:
+        for node in f:
+            nodeset.add(node.strip())
+    return nodeset
+
+def verify_io_for_jobs(datajobs: list, inputdir: str, year: str) -> list:
+    """
+    O objetivo dessa função é listar para quais jobs sem sobreposição, da lista recebida (datajobs), existe I/O registrado pelo collectl.
+
+    Args:
+        list: lista de jobs sem overlap.
+        str: diretório de onde estão os arquivos arquivo dirs_YEAR_MONTH e io_YEAR_MONTH.
+
+    Returns:
+        list: Retorna duas listas, a primeira que são todos os jobs com I/O registrado e, a segunda, com os jobs que não tiveram registro.
+    """
+
+    p = Path(inputdir + "/" + year)
+    io_nodes_registered = list(p.glob('io_*'))
+    nodeset = set()
+    for f in io_nodes_registered:
+        nodeset = get_nodeset(nodeset, str(f))
+    # columns = ['jobid', 'nodelist', 'jobstart', 'jobend', 'io']
+    valid_data = []
+    not_valid_data = []
+
+    for job in datajobs:
+        valid = 1
+        nodelist = [node for node in job[1]]
+        for node in nodelist:
+            if node not in nodeset:
+                valid = 0
+            
+            if not valid:
+                break
+
+        jobid, nodelist, start, end, io = job[0], job[1], job[2], job[3], valid
+
+        if not valid:        
+            not_valid_data.append([ jobid, nodelist, start, end, io ])
+        else: 
+            valid_data.append([ jobid, nodelist, start, end, io ])
+
+    return valid_data, not_valid_data

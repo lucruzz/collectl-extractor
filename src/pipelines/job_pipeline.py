@@ -3,6 +3,9 @@ from infrastructure.job_repository import JobRepository
 from argparse import Namespace
 from .job_parser import JobParser
 from typing import List
+from pipelines.node_pipeline import run_node_pipeline
+from infrastructure.job_writer import run_save_pipeline
+from utils.logging import log_info
 
 
 def job_populate_db_wrapper(config: Namespace) -> None:
@@ -16,22 +19,25 @@ def job_populate_db_wrapper(config: Namespace) -> None:
         jobs = parser.parse(lines)
         # crio um objeto repo para se comunicar com o banco
         repo = JobRepository(config)
-        # insiro os jobs válidos
+        # insiro os jobs válidos no BD
         repo.insert_jobs(jobs)
 
 def job_fetch_db_wrapper(config: Namespace) -> List[tuple]:
     # crio um objeto repo para se comunicar com o banco
     repo = JobRepository(config)
-    return repo.fetch_jobs()
+    datajobs = repo.fetch_jobs()
+    jobs_with_io = run_node_pipeline(datajobs, config)
+    run_save_pipeline(config, jobs_with_io)
 
 def run_job_pipeline(config: Namespace) -> (List[tuple] | None):
 
     match config.action:
         case 'populate':
+            log_info('JobPipeline: Database will be populated!')
             job_populate_db_wrapper(config)
         case 'update':
             pass
-        case 'export':
+        case 'extract':
             return job_fetch_db_wrapper(config)
         case _:
             raise ValueError('Erro de job_pipeline.py: ação não definida!')
