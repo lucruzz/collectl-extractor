@@ -1,5 +1,6 @@
 import csv
 from pathlib import Path
+from argparse import Namespace
 
 
 def write_jobs(datajobs: list, prefix: str, outputpath: str = './outputs/slurm'):
@@ -13,5 +14,5 @@ def write_jobs(datajobs: list, prefix: str, outputpath: str = './outputs/slurm')
         )
         writer.writerows(datajobs)
 
-def run_save_pipeline(config, jobs_with_io: list):
+def run_save_pipeline(config: Namespace, jobs_with_io: list):
     write_jobs(jobs_with_io, config.schema_db, outputpath = config.output)

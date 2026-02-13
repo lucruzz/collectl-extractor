@@ -4,6 +4,7 @@ from domain.job import Job
 from argparse import Namespace
 from typing import List
 from utils.logging import log_info, log_error
+from utils.dateutils import build_date_start, build_date_end
 
 
 class JobRepository:
@@ -60,9 +61,13 @@ class JobRepository:
 
         cursor.execute(query, values)
 
-    def fetch_jobs(self) -> List[tuple]:
+    def fetch_jobs(self, year: str, startmonth: str, endmonth: str) -> List[tuple]:
+        startdate = build_date_start(year, startmonth)
+        enddate = build_date_end(year, endmonth)
+
         query = f"""
-            SELECT jobid, status, nodelist, jobstart, jobend FROM {self.get_schema()}.job
+            SELECT jobid,status,nodelist,jobstart,jobend FROM {self.get_schema()}.job
+            WHERE jobstart >= '{startdate}' AND jobend <= '{enddate}';
         """
 
         self.db.connect_db()

@@ -48,12 +48,13 @@ list_directories() {
         local output_file_tarname="${OUTPUT_DIR_RENAMED}/${YEAR}/${OUTPUT_FILENAME_PATTERN_TAR}${mes}"
         find ${tmp_dir} -maxdepth 1 -type f -printf "%f\n" > ${output_file_tarname}
 
-        local output_file_io_nodename="${OUTPUT_DIR_RENAMED}/${YEAR}/${OUTPUT_FILENAME_PATTERN_NODELIST}${mes}"
+        local output_file_io_nodename="${OUTPUT_DIR_RENAMED}/${YEAR}/${OUTPUT_FILENAME_PATTERN_NODELIST}${mes}.csv"
         
         if [ "$SCHEMA" = "sdumont" ]; then
             awk -F. '{print $NF}' ${output_file_tarname} | sort | uniq > ${output_file_io_nodename}
         elif [ "$SCHEMA" = "sdumont2nd" ]; then
-            awk -F- '{print $2}' ${output_file_tarname} | sort | uniq > ${output_file_io_nodename}
+            # awk -F- '{print $2}' ${output_file_tarname} | sort | uniq > ${output_file_io_nodename}
+            awk -F- '{print $1","$2","$3}' ${output_file_tarname} | awk -F. '{print $1","$2}' | awk -FLLITE_LLDET '{print $1}' > ${output_file_io_nodename}
         else
             echo "$(date +"%d/%m/%Y %H:%M:%S") ERROR Not a valid schema or schema not defined. It must be sdumont or sdumont2nd."
         fi

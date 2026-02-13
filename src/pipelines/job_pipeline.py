@@ -25,7 +25,7 @@ def job_populate_db_wrapper(config: Namespace) -> None:
 def job_fetch_db_wrapper(config: Namespace) -> List[tuple]:
     # crio um objeto repo para se comunicar com o banco
     repo = JobRepository(config)
-    datajobs = repo.fetch_jobs()
+    datajobs = repo.fetch_jobs(config.year, config.month_start, config.month_end)
     jobs_with_io = run_node_pipeline(datajobs, config)
     run_save_pipeline(config, jobs_with_io)
 
@@ -41,27 +41,8 @@ def run_job_pipeline(config: Namespace) -> (List[tuple] | None):
             return job_fetch_db_wrapper(config)
         case _:
             raise ValueError('Erro de job_pipeline.py: ação não definida!')
-        
-    
-    # if config.output_file:
-    #     writer = JobWriter(config.output_file)
-    #     writer.write(jobs)
-
-    # aqui entra:
-    # salvar no banco
-    # validação extra
-    # estatísticas
-
-    # print(f'[!] Number of valid jobs    : {parser.get_num_valid_jobs()}')
-    # print(f'[!] Number of invalid jobs  : {parser.get_num_invalid_jobs()}')
-    # print(f'[!] Total number of jobs    : {parser.get_num_invalid_jobs() + parser.get_num_valid_jobs()}')
 
 
-
-# def export_jobs_pipeline(config):
-#     repo = JobRepository(db)
-#     jobs = repo.fetch_jobs()
-
-    
-
-#     db.close_db()
+# print(f'[!] Number of valid jobs    : {parser.get_num_valid_jobs()}')
+# print(f'[!] Number of invalid jobs  : {parser.get_num_invalid_jobs()}')
+# print(f'[!] Total number of jobs    : {parser.get_num_invalid_jobs() + parser.get_num_valid_jobs()}')
